@@ -1,0 +1,21 @@
+// Переменные
+$font-main: 'Inter', sans-serif;
+$color-dark: #1a1a1a;
+$color-light: #f9f9f9;
+$color-accent: #d3a265;
+
+// Базовые стили
+body {
+  margin: 0;
+  font-family: $font-main;
+  background-color: $color-light;
+  color: $color-dark;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+}

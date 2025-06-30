@@ -1,14 +1,21 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { onMounted, onUpdated } from 'vue'
+import AOS from 'aos';
+
+onMounted(() => {
+  AOS.init({ once: true })
+})
+
+onUpdated(() => {
+  AOS.refresh()
+})
+</script>
 
 <template>
   <main>
-    <nav>
-      <RouterLink to="/">Главная</RouterLink>
-      |
-      <RouterLink to="/about">О нас</RouterLink>
-    </nav>
+      <RouterLink to="/"></RouterLink>
 
-    <RouterView />
+       <RouterView />
   </main>
 </template>
 
