@@ -12,13 +12,15 @@
       class="portfolio__swiper"
     >
       <SwiperSlide v-for="(project, index) in projects" :key="index">
-        <div class="portfolio__slide">
-          <img :src="project.image" :alt="project.title" />
-          <div class="portfolio__caption">
-            <h3>{{ project.title }}</h3>
-            <p>{{ project.description }}</p>
+        <RouterLink :to="{ name: 'project-details', params: { id: project.id } }" class="project-card__link">
+          <div class="portfolio__slide">
+            <img :src="project.image" :alt="project.title" />
+            <div class="portfolio__caption">
+              <h3>{{ project.title }}</h3>
+              <p>{{ project.description }}</p>
+            </div>
           </div>
-        </div>
+        </RouterLink>
       </SwiperSlide>
     </Swiper>
   </section>
@@ -34,21 +36,25 @@ const modules = [Navigation, Pagination]
 
 const projects = [
   {
+    id: '1',
     title: 'Жилой комплекс на берегу',
     description: 'Современная архитектура с видом на озеро',
     image: 'https://cashpo-design.ru/userfiles/%D0%BD%D0%BE%D0%B2%D0%BE%D1%81%D1%82%D0%B8/style-ofic1.jpg'
   },
   {
+    id: '2',
     title: 'Минималистичный дом',
     description: 'Чистые линии и натуральные материалы',
     image: 'https://mayalanya.ru/wp-content/uploads/2025/01/WhatsApp-Image-2025-01-15-at-10.06.44-2.jpeg'
   },
   {
+    id: '3',
     title: 'Офисное пространство',
     description: 'Функциональность и стиль',
     image: 'https://ybis.ru/wp-content/uploads/2023/09/dolomitenhutte-osttirol-avstriia-4.webp'
   },
   {
+    id: '4',
     title: 'Жилой комплекс на берегу',
     description: 'Современная архитектура с видом на озеро',
     image: 'https://cashpo-design.ru/userfiles/%D0%BD%D0%BE%D0%B2%D0%BE%D1%81%D1%82%D0%B8/style-ofic1.jpg'
@@ -92,6 +98,8 @@ const breakpoints = {
     border-radius: 10px;
     overflow: hidden;
     height: 500px;
+    transition: 0.3s ease;
+    cursor: pointer;
 
     img {
       width: 100%;
@@ -110,6 +118,9 @@ const breakpoints = {
         font-size: 0.95rem;
       }
     }
+    &:hover {
+    transform: translateY(-5px);
+  }
   }
 }
 .custom-nav {
@@ -155,5 +166,29 @@ const breakpoints = {
   &:hover {
     background-color: rgba(0, 0, 0, 0.2);
   }
+}
+.swiper-pagination {
+  position: relative; /* или absolute, если надо */
+  text-align: center;
+}
+
+.swiper-pagination-bullet {
+  width: 12px;
+  height: 12px;
+  background-color: rgba(0,0,0,0.2);
+  opacity: 1;
+  border-radius: 50%;
+  margin: 0 6px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  cursor: pointer;
+}
+
+.swiper-pagination-bullet:hover {
+  background-color: rgba(0,0,0,0.4);
+}
+
+.swiper-pagination-bullet-active {
+  background-color: #333;
+  transform: scale(1.3);
 }
 </style>
