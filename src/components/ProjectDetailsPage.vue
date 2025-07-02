@@ -12,13 +12,18 @@
         class="gallery__image"
         data-aos="zoom-in"
         data-aos-delay="100"
+        @click="openLightbox(img)"
       />
     </div>
   </section>
-
    <section v-else class="project-details__loading">
     <p>Загрузка проекта...</p>
   </section>
+
+    <div v-if="lightboxImage" class="lightbox" @click.self="closeLightbox">
+      <img :src="lightboxImage" class="lightbox__image"/>
+      <button class="lightbox__close" @click="closeLightbox">×</button>
+    </div>
 </template>
 
 <script setup>
@@ -56,6 +61,17 @@ const projects = [
 const route = useRoute()
 const router = useRouter()
 const project = ref(null)
+
+const lightboxImage = ref(null)
+
+const openLightbox = (img) => {
+  lightboxImage.value = img
+}
+
+const closeLightbox = () => {
+  lightboxImage.value = null
+}
+
 
 onMounted(() => {
   const id = route.params.id
@@ -118,6 +134,46 @@ const goBack = () => {
     &:hover {
       text-decoration: underline;
     }
+  }
+}
+.lightbox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  background: rgba(0, 0, 0, 0.85);
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease-in-out;
+
+  &__image {
+    max-width: 90vw;
+    max-height: 90vh;
+    border-radius: 12px;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
+  }
+
+  &__close {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    background: transparent;
+    border: none;
+    font-size: 3rem;
+    color: #fff;
+    cursor: pointer;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    background: rgba(0, 0, 0, 0);
+  }
+  to {
+    background: rgba(0, 0, 0, 0.85);
   }
 }
 </style>
