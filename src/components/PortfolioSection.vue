@@ -13,13 +13,7 @@
     >
       <SwiperSlide v-for="(project, index) in projects" :key="index">
         <RouterLink :to="{ name: 'project-details', params: { id: project.id } }" class="project-card__link">
-          <div class="portfolio__slide">
-            <img :src="project.image" :alt="project.title" />
-            <div class="portfolio__caption">
-              <h3>{{ project.title }}</h3>
-              <p>{{ project.description }}</p>
-            </div>
-          </div>
+          <ProjectCard :image="project.image" :title="project.title" :description="project.description"/>
         </RouterLink>
       </SwiperSlide>
     </Swiper>
@@ -32,6 +26,8 @@ import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 import { Navigation, Pagination } from 'swiper/modules'
+
+import ProjectCard from './ProjectCard.vue';
 const modules = [Navigation, Pagination]
 
 const projects = [
