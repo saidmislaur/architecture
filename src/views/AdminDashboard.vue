@@ -2,156 +2,171 @@
   <div class="admin-dashboard">
     <h1>Админ-панель</h1>
 
-    <!-- Список проектов -->
-    <section class="project-list">
-      <h2>Существующие проекты</h2>
-      <div v-if="projects.length">
-        <div
-          class="project-item"
-          v-for="(project, index) in projects"
-          :key="index"
-        >
-          <div>
-            <strong>{{ project.title }}</strong>
-            <p>{{ project.description.slice(0, 100) }}...</p>
-          </div>
-          <div class="buttons">
-            <button @click="editProject(project)">✏️ Редактировать</button>
-            <button @click="deleteProject(index)">🗑️ Удалить</button>
-          </div>
-        </div>
-      </div>
-      <p v-else>Нет проектов</p>
+    <section class="admin-section">
+      <HeroEditor />
     </section>
 
-    <!-- Добавление проекта -->
-    <section class="add-project">
-      <h2>{{ editingIndex !== null ? 'Редактировать проект' : 'Добавить проект' }}</h2>
+    <section class="admin-section">
+      <h2>Проекты</h2>
+        <div class="admin-section__projects">
+            <ProjectCard 
+                v-for="project in projects" 
+                class="admin-section__project" 
+                :image="project.image" 
+                :title="project.title"
+            />
+        </div> 
+        <div class="button-group">
+            <button @click="goToAddProject">Добавить проект</button>
+            <button @click="goToManageProjects">Управление проектами</button>
+        </div>
+    </section>
 
-      <form @submit.prevent="saveProject">
-        <input type="text" v-model="form.title" placeholder="Название проекта" required />
-        <textarea v-model="form.description" placeholder="Описание проекта" required></textarea>
+    <!-- 3. Контактная информация -->
+    <section class="admin-section">
+      <ContactEditor />
+    </section>
 
-        <input type="file" multiple @change="handleImageUpload" />
-
-        <button type="submit">
-          {{ editingIndex !== null ? 'Сохранить изменения' : 'Добавить проект' }}
-        </button>
-      </form>
+    <!-- 4. Информация о компании -->
+    <section class="admin-section">
+      <h2>О компании</h2>
+      <textarea v-model="aboutCompany" rows="6" placeholder="Введите информацию о компании..." />
+      <button @click="saveAboutCompany">Сохранить</button>
     </section>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import ProjectCard from '../components/ProjectCard.vue';
+import ContactEditor from '../components/admin/ContactEditor.vue';
+import HeroEditor from '../components/admin/HeroEditor.vue';
 
-const projects = ref([])
 
-const form = ref({
-  title: '',
-  description: '',
-  images: [],
+const projects = [
+  {
+    id: '1',
+    title: 'Жилой комплекс на берегу',
+    description: 'Современная архитектура с видом на озеро',
+    image: 'https://cashpo-design.ru/userfiles/%D0%BD%D0%BE%D0%B2%D0%BE%D1%81%D1%82%D0%B8/style-ofic1.jpg'
+  },
+  {
+    id: '2',
+    title: 'Минималистичный дом',
+    description: 'Чистые линии и натуральные материалы',
+    image: 'https://mayalanya.ru/wp-content/uploads/2025/01/WhatsApp-Image-2025-01-15-at-10.06.44-2.jpeg'
+  },
+  {
+    id: '3',
+    title: 'Офисное пространство',
+    description: 'Функциональность и стиль',
+    image: 'https://ybis.ru/wp-content/uploads/2023/09/dolomitenhutte-osttirol-avstriia-4.webp'
+  },
+  {
+    id: '4',
+    title: 'Жилой комплекс на берегу',
+    description: 'Современная архитектура с видом на озеро',
+    image: 'https://cashpo-design.ru/userfiles/%D0%BD%D0%BE%D0%B2%D0%BE%D1%81%D1%82%D0%B8/style-ofic1.jpg'
+  },
+]
+
+const contacts = ref({
+  email: '',
+  phone: '',
+  address: '',
 })
 
-const editingIndex = ref(null)
+const aboutCompany = ref('')
 
-const saveProject = () => {
-  if (editingIndex.value !== null) {
-    projects.value[editingIndex.value] = { ...form.value }
-    editingIndex.value = null
-  } else {
-    projects.value.push({ ...form.value })
-  }
-
-  form.value = {
-    title: '',
-    description: '',
-    images: [],
+function onUploadHero(event) {
+  const file = event.target.files[0]
+  if (file) {
+    console.log('Файл загружен:', file.name)
+    // отправка на сервер
   }
 }
 
-const editProject = (project) => {
-  editingIndex.value = projects.value.indexOf(project)
-  form.value = { ...project }
+function saveContacts() {
+  console.log('Сохраняем контакты:', contacts.value)
+  // отправка на сервер
 }
 
-const deleteProject = (index) => {
-  projects.value.splice(index, 1)
+function saveAboutCompany() {
+  console.log('Сохраняем "О компании":', aboutCompany.value)
+  // отправка на сервер
 }
 
-const handleImageUpload = (event) => {
-  const files = Array.from(event.target.files)
-  const urls = files.map(file => URL.createObjectURL(file))
-  form.value.images = urls
+function goToAddProject() {
+  // переход на страницу добавления
+}
+
+function goToManageProjects() {
+  // переход на страницу управления
 }
 </script>
 
 <style scoped lang="scss">
 .admin-dashboard {
-  padding: 4rem 10vw;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
 
   h1 {
-    font-size: 2.2rem;
+    font-size: 2rem;
     margin-bottom: 2rem;
+    text-align: center;
   }
 
-  section {
-    margin-bottom: 3rem;
-  }
-
-  .project-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    margin-bottom: 1rem;
+  .admin-section {
+    margin-bottom: 2.5rem;
+    padding: 1.5rem;
+    border: 1px solid #ccc;
+    border-radius: 12px;
     background: #fafafa;
 
-    .buttons button {
-      margin-left: 0.5rem;
-      background: #e3e3e3;
-      border: none;
-      padding: 0.4rem 0.8rem;
-      cursor: pointer;
-      border-radius: 4px;
-
-      &:hover {
-        background: #d3d3d3;
-      }
+    &__project {
+        margin-bottom: 50px;
     }
   }
 
-  form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+  .form-group {
+    margin-bottom: 1rem;
 
-    input[type='text'],
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    input,
     textarea {
-      padding: 0.7rem;
-      border-radius: 6px;
+      width: 100%;
+      padding: 0.6rem;
       border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
     }
+  }
 
-    input[type='file'] {
-      margin-top: 0.5rem;
+  .button-group {
+    display: flex;
+    gap: 1rem;
+    button {
+      flex: 1;
     }
+  }
 
-    button[type='submit'] {
-      align-self: flex-start;
-      background-color: #d3a265;
-      color: white;
-      border: none;
-      padding: 0.6rem 1.4rem;
-      border-radius: 6px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.2s;
+  button {
+    padding: 0.6rem 1.2rem;
+    background-color: #222;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
 
-      &:hover {
-        background-color: #b78347;
-      }
+    &:hover {
+      background-color: #444;
     }
   }
 }

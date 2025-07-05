@@ -1,5 +1,5 @@
 <template>
-  <section class="hero">
+  <section class="hero" :style="{ backgroundImage: `url(http://localhost:5000${heroImage})` }">
     <div class="hero__content">
       <h1 class="hero__title">Создаем архитектуру будущего</h1>
       <p class="hero__subtitle">
@@ -12,12 +12,30 @@
 
 <script setup>
 import { RouterLink } from 'vue-router'
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
+
+const heroImage = ref('')
+
+onMounted(async () => {
+  try {
+    const res = await axios.get('http://localhost:5000/api/settings')
+    heroImage.value = res.data.heroImage || '/uploads/default.jpg'
+    console.log(heroImage.value)
+  } catch (err) {
+    console.error('Ошибка загрузки фона', err)
+    heroImage.value = '/uploads/default.jpg'
+  }
+})
+
 </script>
 
 <style scoped lang="scss">
 .hero {
   height: 100vh;
-  background-color: #f5f5f5;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   display: flex;
   align-items: center;
   padding: 0 10vw;
@@ -33,12 +51,12 @@ import { RouterLink } from 'vue-router'
     font-size: 3.5rem;
     font-weight: 700;
     margin-bottom: 1rem;
-    color: #1a1a1a;
+    color: #e1e1e1;
   }
 
   &__subtitle {
     font-size: 1.25rem;
-    color: #666;
+    color: #b5b5b5;
     margin-bottom: 2rem;
     max-width: 500px;
   }
