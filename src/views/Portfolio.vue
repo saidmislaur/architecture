@@ -1,0 +1,114 @@
+<template>
+  <div class="portfolio-page">
+    <Header />
+
+    <div v-if="loading" class="loading">Загрузка...</div>
+    <div v-else class="portfolio-page__projects">
+        <h1>Мои проекты</h1>
+        <div   class="projects-grid">
+         <RouterLink v-for="project in projects" :to="{ name: 'project-details', params: { id: project._id } }">
+            <div
+                class="project-card"
+                :key="project._id"
+                @click="goToProject(project._id)"
+            >
+                <img
+                v-if="project.images && project.images.length"
+                :src="project.images"
+                alt="Project Cover"
+                />
+                <h3>{{ project.title }}</h3>
+                <p>{{ project.description }}</p>
+            </div>
+         </RouterLink>
+    </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
+import { useRouter } from 'vue-router'
+
+import Header from '../components/Header.vue';
+
+const router = useRouter()
+const projects = ref([])
+const loading = ref(true)
+
+const fetchProjects = async () => {
+  try {
+    const res = await axios.get('http://localhost:5000/api/projects')
+    projects.value = res.data
+  } catch (err) {
+    console.error('Ошибка загрузки проектов', err)
+  } finally {
+    loading.value = false
+  }
+}
+
+const goToProject = (id) => {
+  router.push(`/projects/${id}`)
+}
+
+const getImageUrl = (imgPath) => {
+  return `http://localhost:5000/${imgPath}`
+}
+
+onMounted(fetchProjects)
+</script>
+
+<style scoped lang="scss">
+.portfolio-page {
+
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .loading {
+    font-size: 1.2rem;
+  }
+
+  &__projects {
+    padding: 5vh 4vh;
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+    gap: 3rem;
+  }
+
+  .project-card {
+    cursor: pointer;
+    border: 1px solid #ddd;
+    padding: 1rem;
+    border-radius: 10px;
+    transition: box-shadow 0.2s;
+    background-color: #fff;
+
+    &:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    img {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+    }
+
+    h3 {
+      margin: 0 0 0.5rem;
+    }
+
+    p {
+      color: #555;
+      font-size: 0.95rem;
+    }
+  }
+}
+</style>

@@ -13,6 +13,8 @@ const props = defineProps({
     title: String,
     description: String
 })
+
+
 </script>
 
 <style lang="scss">

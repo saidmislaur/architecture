@@ -6,9 +6,9 @@
         Если у вас есть идеи или проект — напишите нам. Мы с радостью ответим!
       </p>
       <ul class="contact__details">
-        <li><strong>Адрес:</strong> ул. Архитектурная, 7, Город</li>
-        <li><strong>Email:</strong> info@archstudio.com</li>
-        <li><strong>Телефон:</strong> +7 999 123-45-67</li>
+        <li><strong>Адрес:</strong> {{address}} </li>
+        <li><strong>Email:</strong> {{ emailInfo }}</li>
+        <li><strong>Телефон:</strong> {{ phone }}</li>
       </ul>
     </div>
 
@@ -22,11 +22,16 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
 
 const name = ref('')
 const email = ref('')
 const message = ref('')
+
+const address = ref('')
+const emailInfo = ref('')
+const phone = ref('')
 
 const handleSubmit = () => {
   console.log('📨 Отправка формы:', {
@@ -42,6 +47,19 @@ const handleSubmit = () => {
 
   alert('Спасибо за сообщение!')
 }
+
+ const getContactInfo = async() => {
+    try {
+      const res = await axios.get("http://localhost:5000/api/contact")
+      console.log()
+      address.value = res.data.address;
+      emailInfo.value = res.data.email;
+      phone.value = res.data.phone;
+    } catch (error) {
+      console.error('Ошибка загрузки данных', err)
+    }
+  }
+onMounted(getContactInfo);
 </script>
 
 <style scoped lang="scss">

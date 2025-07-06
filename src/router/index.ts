@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Home from '../views/Home.vue';
 import About from '../views/About.vue';
 import Admin from '../views/AdminDashboard.vue';
+import Portfolio from '../views/Portfolio.vue';
 import ProjectDetailsPage from '../components/ProjectDetailsPage.vue';
 
 const routes = [
@@ -21,9 +22,15 @@ const routes = [
     component: Admin,
   },
   { 
+    path: '/projects', 
+    component: Portfolio, 
+    name: 'project' 
+  },
+  { 
     path: '/projects/:id', 
     component: ProjectDetailsPage, 
-    name: 'project-details' },
+    name: 'project-details' 
+  },
 ];
 
 const router = createRouter({
