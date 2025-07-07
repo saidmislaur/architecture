@@ -4,6 +4,8 @@ import About from '../views/About.vue';
 import Admin from '../views/AdminDashboard.vue';
 import Portfolio from '../views/Portfolio.vue';
 import ProjectDetailsPage from '../components/ProjectDetailsPage.vue';
+import AdminPosts from '../components/admin/AdminPosts.vue';
+import ProjectEditor from '../components/admin/ProjectEditor.vue';
 
 const routes = [
   {
@@ -31,6 +33,21 @@ const routes = [
     component: ProjectDetailsPage, 
     name: 'project-details' 
   },
+  {
+    path: '/admin/projects',
+    component: AdminPosts,
+    name: 'admin-projects'
+  },
+  {
+    path: '/admin/posts/edit/:id',
+    component: ProjectEditor,
+    name: 'admin-edit'
+  },
+  {
+    path: '/admin/posts/new',
+    component: ProjectEditor,
+    name: 'create-edit'
+  }
 ];
 
 const router = createRouter({

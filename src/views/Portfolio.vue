@@ -72,7 +72,7 @@ onMounted(fetchProjects)
   }
 
   &__projects {
-    padding: 5vh 4vh;
+    padding: 5vh 10vh;
   }
 
   .projects-grid {

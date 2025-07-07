@@ -12,8 +12,8 @@
       class="portfolio__swiper"
     >
       <SwiperSlide v-for="(project, index) in projects" :key="index">
-        <RouterLink :to="{ name: 'project-details', params: { id: project.id } }" class="project-card__link">
-          <ProjectCard :image="project.image" :title="project.title" :description="project.description"/>
+        <RouterLink :to="{ name: 'project-details', params: { id: project._id } }" class="project-card__link">
+          <ProjectCard :image="project.images" :title="project.title" :description="project.description"/>
         </RouterLink>
       </SwiperSlide>
     </Swiper>
@@ -21,41 +21,17 @@
 </template>
 
 <script setup>
+import {ref,onMounted} from 'vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 import { Navigation, Pagination } from 'swiper/modules'
+import axios from 'axios'
 
 import ProjectCard from './ProjectCard.vue';
 const modules = [Navigation, Pagination]
 
-const projects = [
-  {
-    id: '1',
-    title: 'Жилой комплекс на берегу',
-    description: 'Современная архитектура с видом на озеро',
-    image: 'https://cashpo-design.ru/userfiles/%D0%BD%D0%BE%D0%B2%D0%BE%D1%81%D1%82%D0%B8/style-ofic1.jpg'
-  },
-  {
-    id: '2',
-    title: 'Минималистичный дом',
-    description: 'Чистые линии и натуральные материалы',
-    image: 'https://mayalanya.ru/wp-content/uploads/2025/01/WhatsApp-Image-2025-01-15-at-10.06.44-2.jpeg'
-  },
-  {
-    id: '3',
-    title: 'Офисное пространство',
-    description: 'Функциональность и стиль',
-    image: 'https://ybis.ru/wp-content/uploads/2023/09/dolomitenhutte-osttirol-avstriia-4.webp'
-  },
-  {
-    id: '4',
-    title: 'Жилой комплекс на берегу',
-    description: 'Современная архитектура с видом на озеро',
-    image: 'https://cashpo-design.ru/userfiles/%D0%BD%D0%BE%D0%B2%D0%BE%D1%81%D1%82%D0%B8/style-ofic1.jpg'
-  },
-]
 
 const breakpoints = {
   640: {
@@ -68,6 +44,20 @@ const breakpoints = {
     slidesPerView: 3
   }
 }
+
+const projects = ref([]);
+
+const getProjects = async () => {
+  try {
+  const res = await axios.get('http://localhost:5000/api/projects?limit=6&sort=desc')
+    console.log(res.data)
+    projects.value = res.data;
+  } catch (err) {
+    console.error('Ошибка при загрузке проекта:', err)
+  }
+}
+
+onMounted(getProjects);
 </script>
 
 <style scoped lang="scss">

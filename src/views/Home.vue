@@ -14,4 +14,5 @@ import AboutSection from '../components/AboutSection.vue';
 import PortfolioSection from '../components/PortfolioSection.vue';
 import ContactSection from '../components/ContactSection.vue'
 import Header from '../components/Header.vue';
+
 </script>
