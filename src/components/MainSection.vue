@@ -1,13 +1,14 @@
 <template>
-  <section class="hero" :style="{ backgroundImage: `url(http://localhost:5000${heroImage})` }">
-    <div class="hero__content">
-      <h1 class="hero__title">Создаем архитектуру будущего</h1>
-      <p class="hero__subtitle">
-        Эстетика, функциональность и минимализм в каждом проекте.
-      </p>
-      <RouterLink to="/projects" class="hero__btn">Смотреть проекты</RouterLink>
-    </div>
-  </section>
+   <section class="hero">
+      <div class="hero__content">
+        <h2 class="hero__title">Создаем пространства<br>будущего</h2>
+        <p class="hero__subtitle">Современная архитектура с акцентом на функциональность и эстетику</p>
+        <button class="hero__cta">Наши проекты</button>
+      </div>
+      <div class="hero__image">
+        <img src="https://s0.rbk.ru/v6_top_pics/media/img/2/24/347126512643242.jpeg" alt="Архитектурный проект" />
+      </div>
+    </section>
 </template>
 
 <script setup>
@@ -17,62 +18,68 @@ import axios from 'axios'
 
 const heroImage = ref('')
 
-onMounted(async () => {
-  try {
-    const res = await axios.get('http://localhost:5000/api/settings')
-    heroImage.value = res.data.heroImage || '/uploads/default.jpg'
-    console.log(heroImage.value)
-  } catch (err) {
-    console.error('Ошибка загрузки фона', err)
-    heroImage.value = '/uploads/default.jpg'
-  }
-})
+// onMounted(async () => {
+//   try {
+//     const res = await axios.get('http://localhost:5000/api/settings')
+//     heroImage.value = res.data.heroImage || '/uploads/default.jpg'
+//     console.log(heroImage.value)
+//   } catch (err) {
+//     console.error('Ошибка загрузки фона', err)
+//     heroImage.value = '/uploads/default.jpg'
+//   }
+// })
 
 </script>
 
 <style scoped lang="scss">
 .hero {
-  height: 100vh;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
   display: flex;
   align-items: center;
-  padding: 0 10vw;
-  position: relative;
-  overflow: hidden;
+  min-height: 100vh;
+  padding: 0 2rem;
+  margin-top: 80px;
 
   &__content {
-    max-width: 700px;
-    animation: fadeInUp 1s ease forwards;
+    flex: 1;
+    max-width: 600px;
   }
 
   &__title {
-    font-size: 3.5rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    color: #e1e1e1;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 300;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
   }
 
   &__subtitle {
-    font-size: 1.25rem;
-    color: #b5b5b5;
+    font-size: 1.2rem;
+    color: #666;
     margin-bottom: 2rem;
-    max-width: 500px;
+    line-height: 1.6;
   }
 
-  &__btn {
-    display: inline-block;
-    padding: 0.75rem 1.5rem;
-    background-color: #d3a265;
+  &__cta {
+    background: #333;
     color: white;
-    font-weight: 500;
-    text-decoration: none;
-    transition: 0.3s;
-    border-radius: 4px;
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
 
     &:hover {
-      background-color: darken(#d3a265, 10%);
+      background: #555;
+    }
+  }
+
+  &__image {
+    flex: 1;
+    text-align: center;
+
+    img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
     }
   }
 }

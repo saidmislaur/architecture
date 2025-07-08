@@ -1,180 +1,224 @@
 <template>
-  <section class="portfolio" id="portfolio">
-    <h2 class="portfolio__title">Наши проекты</h2>
+  <section id="projects" class="projects">
+    <div class="container">
+      <h2 class="section-title">Портфолио проектов</h2>
 
-    <Swiper
-      :modules="modules"
-      :slides-per-view="1"
-      :space-between="30"
-      :breakpoints="breakpoints"
-      navigation
-      pagination
-      class="portfolio__swiper"
-    >
-      <SwiperSlide v-for="(project, index) in projects" :key="index">
-        <RouterLink :to="{ name: 'project-details', params: { id: project._id } }" class="project-card__link">
-          <ProjectCard :image="project.images" :title="project.title" :description="project.description"/>
-        </RouterLink>
-      </SwiperSlide>
-    </Swiper>
+      <!-- Поиск и фильтры -->
+      <div class="projects__controls">
+        <div class="projects__search">
+          <input 
+            v-model="searchQuery" 
+            type="text" 
+            placeholder="Поиск проектов..."
+            class="search-input"
+          />
+        </div>
+
+        <div class="projects__sort">
+          <select v-model="sortBy" class="sort-select">
+            <option value="year">По году</option>
+            <option value="title">По названию</option>
+            <option value="area">По площади</option>
+          </select>
+
+          <button 
+            @click="isGalleryView = !isGalleryView"
+            :class="['view-toggle', { active: isGalleryView }]"
+          >
+            {{ isGalleryView ? 'Список' : 'Сетка' }}
+          </button>
+        </div>
+      </div>
+
+      <div v-if="searchQuery" class="search-results">
+        Найдено проектов: {{ filteredProjects.length }}
+      </div>
+
+      <!-- Сетка проектов -->
+      <div :class="['projects__grid', { 'gallery-view': isGalleryView }]">
+        <div 
+          v-for="(project, index) in filteredProjects" 
+          :key="project._id || index"
+          class="project-card"
+          @click="openProject(project)"
+        >
+          <div class="project-card__image">
+            <img 
+              :src="getImageUrl(project.photos[0]?.image)" 
+              :alt="project.title" 
+            />
+            <div class="project-card__overlay">
+              <span class="project-card__category">{{ project.category || 'Без категории' }}</span>
+              <div class="project-card__tags">
+                <span 
+                  v-for="(tag, i) in project.tags?.slice(0, 2)" 
+                  :key="i" 
+                  class="tag"
+                >
+                  {{ tag }}
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="project-card__content">
+            <h3>{{ project.title }}</h3>
+            <div class="project-card__meta">
+              <span class="location">{{ project.photos.description || 'Не указано' }}</span>
+            </div>
+            <p>{{ project.description }}</p>
+            <span class="project-card__year">
+              {{ new Date(project.createdAt).getFullYear() }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Пустое состояние -->
+      <div v-if="filteredProjects.length === 0" class="empty-state">
+        <h3>Проекты не найдены</h3>
+        <p>Попробуйте изменить параметры поиска или фильтры</p>
+        <button 
+          @click="searchQuery = ''; activeFilter = 'all'" 
+          class="reset-btn"
+        >
+          Сбросить фильтры
+        </button>
+      </div>
+    </div>
   </section>
 </template>
 
 <script setup>
-import {ref,onMounted} from 'vue'
-import { Swiper, SwiperSlide } from 'swiper/vue'
-import 'swiper/css'
-import 'swiper/css/navigation'
-import 'swiper/css/pagination'
-import { Navigation, Pagination } from 'swiper/modules'
+import { ref, onMounted, computed, reactive } from 'vue'
 import axios from 'axios'
 
-import ProjectCard from './ProjectCard.vue';
-const modules = [Navigation, Pagination]
-
-
-const breakpoints = {
-  640: {
-    slidesPerView: 1
-  },
-  768: {
-    slidesPerView: 2
-  },
-  1024: {
-    slidesPerView: 3
-  }
-}
-
-const projects = ref([]);
+const projects = ref([])
+const activeFilter = ref('all')
+const searchQuery = ref('')
+const sortBy = ref('year')
+const isGalleryView = ref(false)
 
 const getProjects = async () => {
   try {
-  const res = await axios.get('http://localhost:5000/api/projects?limit=6&sort=desc')
-    console.log(res.data)
-    projects.value = res.data;
+    const res = await axios.get('http://localhost:5000/api/projects')
+    projects.value = res.data
   } catch (err) {
-    console.error('Ошибка при загрузке проекта:', err)
+    console.error('Ошибка при загрузке проектов:', err)
   }
 }
 
-onMounted(getProjects);
+const filteredProjects = computed(() => {
+  let filtered = [...projects.value]
+
+  if (activeFilter.value !== 'all') {
+    filtered = filtered.filter(p => p.category === activeFilter.value)
+  }
+
+  if (searchQuery.value) {
+    const q = searchQuery.value.toLowerCase()
+    filtered = filtered.filter(p =>
+      p.title.toLowerCase().includes(q) ||
+      p.description.toLowerCase().includes(q)
+    )
+  }
+
+  filtered.sort((a, b) => {
+    switch (sortBy.value) {
+      case 'year':
+        return new Date(b.createdAt) - new Date(a.createdAt)
+      case 'title':
+        return a.title.localeCompare(b.title)
+      case 'area':
+        return (parseInt(b.area) || 0) - (parseInt(a.area) || 0)
+      default:
+        return 0
+    }
+  })
+
+  return filtered
+})
+
+const openProject = (project) => {
+  console.log('Открыт проект:', project)
+}
+
+const getImageUrl = (path) => {
+  if (!path) return 'https://s0.rbk.ru/v6_top_pics/media/img/2/24/347126512643242.jpeg'
+  if (path.startsWith('http')) return path
+  return `http://localhost:5000${path}`
+}
+
+onMounted(() => {
+  getProjects()
+})
 </script>
 
 <style scoped lang="scss">
-.portfolio {
-  padding: 6rem 10vw;
-  background-color: #fff;
-  text-align: center;
+.projects {
+  padding: 5rem 0;
+  background: #f8f9fa;
 
-  &__title {
-    font-size: 2rem;
-    margin-bottom: 3rem;
-    color: #1a1a1a;
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+}
+
+.project-card {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   }
 
-  &__swiper {
-    width: 100%;
-  }
-
-  &__slide {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: #f6f6f6;
-    border-radius: 10px;
+  &__image {
+    height: 250px;
     overflow: hidden;
-    height: 500px;
-    transition: 0.3s ease;
-    cursor: pointer;
 
     img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+  }
+
+  &:hover &__image img {
+    transform: scale(1.05);
+  }
+
+  &__content {
+    padding: 1.5rem;
+    position: relative;
+
+    h3 {
+      font-size: 1.3rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
     }
 
-    &__caption {
-      margin-top: 1rem;
-      h3 {
-        font-size: 1.25rem;
-        margin-bottom: 0.5rem;
-      }
-      p {
-        color: #555;
-        font-size: 0.95rem;
-      }
+    p {
+      color: #666;
+      margin-bottom: 1rem;
     }
-    &:hover {
-    transform: translateY(-5px);
   }
-  }
-}
-.custom-nav {
-  width: 40px;
-  height: 40px;
-  background-color: rgba(0, 0, 0, 0.1);
-  border-radius: 50%;
-  backdrop-filter: blur(4px);
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 10;
-  cursor: pointer;
 
-  &::after {
-    content: '';
-    display: block;
-    width: 10px;
-    height: 10px;
-    border: solid #333;
-    border-width: 0 2px 2px 0;
-    padding: 4px;
-    transform: rotate(45deg);
-    margin: auto;
+  &__year {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotate(45deg);
+    top: 1.5rem;
+    right: 0.5rem;
+    background: #333;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
   }
-
-  &.swiper-button-prev::after {
-    transform: translate(-50%, -50%) rotate(225deg);
-  }
-
-  &.swiper-button-next {
-    right: 0;
-  }
-
-  &.swiper-button-prev {
-    left: 0;
-  }
-
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.2);
-  }
-}
-.swiper-pagination {
-  position: relative; /* или absolute, если надо */
-  text-align: center;
-}
-
-.swiper-pagination-bullet {
-  width: 12px;
-  height: 12px;
-  background-color: rgba(0,0,0,0.2);
-  opacity: 1;
-  border-radius: 50%;
-  margin: 0 6px;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-  cursor: pointer;
-}
-
-.swiper-pagination-bullet:hover {
-  background-color: rgba(0,0,0,0.4);
-}
-
-.swiper-pagination-bullet-active {
-  background-color: #333;
-  transform: scale(1.3);
 }
 </style>

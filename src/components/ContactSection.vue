@@ -1,28 +1,44 @@
 <template>
-  <section class="contact" id="contact">
-    <div class="contact__info" data-aos="fade-up">
-      <h2 class="contact__title">Свяжитесь с нами</h2>
-      <p class="contact__text">
-        Если у вас есть идеи или проект — напишите нам. Мы с радостью ответим!
-      </p>
-      <ul class="contact__details">
-        <li><strong>Адрес:</strong> {{address}} </li>
-        <li><strong>Email:</strong> {{ emailInfo }}</li>
-        <li><strong>Телефон:</strong> {{ phone }}</li>
-      </ul>
-    </div>
-
-    <form class="contact__form" @submit.prevent="handleSubmit" data-aos="fade-up" data-aos-delay="200">
-      <input type="text" placeholder="Ваше имя" v-model="name" required />
-      <input type="email" placeholder="Ваш email" v-model="email" required />
-      <textarea placeholder="Сообщение..." v-model="message" required></textarea>
-      <button type="submit">Отправить</button>
-    </form>
-  </section>
+  <section id="contact" class="contact">
+      <div class="container">
+        <div class="contact__content">
+          <div class="contact__info">
+            <h2 class="section-title">Свяжитесь с нами</h2>
+            <p>Готовы обсудить ваш проект? Мы всегда открыты для новых идей и сотрудничества.</p>
+            <div class="contact__details">
+              <div class="contact__item">
+                <strong>Телефон:</strong>
+                <span>{{phone}}</span>
+              </div>
+              <div class="contact__item">
+                <strong>Email:</strong>
+                <span>{{ emailInfo }}</span>
+              </div>
+              <div class="contact__item">
+                <strong>Адрес:</strong>
+                <span>{{ address }}</span>
+              </div>
+            </div>
+          </div>
+          <form class="contact__form" @submit.prevent="submitForm">
+            <div class="form-group">
+              <input v-model="form.name" type="text" placeholder="Ваше имя" required />
+            </div>
+            <div class="form-group">
+              <input v-model="form.email" type="email" placeholder="Email" required />
+            </div>
+            <div class="form-group">
+              <textarea v-model="form.message" placeholder="Сообщение" rows="5" required></textarea>
+            </div>
+            <button type="submit" class="form-submit">Отправить</button>
+          </form>
+        </div>
+      </div>
+    </section>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, reactive } from 'vue'
 import axios from 'axios'
 
 const name = ref('')
@@ -32,6 +48,12 @@ const message = ref('')
 const address = ref('')
 const emailInfo = ref('')
 const phone = ref('')
+
+const form = reactive({
+  name: '',
+  email: '',
+  message: ''
+})
 
 const handleSubmit = () => {
   console.log('📨 Отправка формы:', {
@@ -64,74 +86,91 @@ onMounted(getContactInfo);
 
 <style scoped lang="scss">
 .contact {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 3rem;
-  padding: 6rem 10vw;
-  background-color: #fdfdfd;
+  padding: 5rem 0;
+
+  &__content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+  }
 
   &__info {
+    .section-title {
+      text-align: left;
+      margin-bottom: 2rem;
+    }
+
+    p {
+      font-size: 1.1rem;
+      color: #666;
+      margin-bottom: 2rem;
+      line-height: 1.8;
+    }
+  }
+
+  &__details {
     display: flex;
     flex-direction: column;
     gap: 1rem;
   }
 
-  &__title {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
-    color: #1a1a1a;
-  }
+  &__item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
 
-  &__text {
-    font-size: 1.1rem;
-    color: #555;
-  }
+    strong {
+      color: #333;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
 
-  &__details {
-    list-style: none;
-    padding: 0;
-    margin-top: 1rem;
-
-    li {
-      margin-bottom: 0.5rem;
-      font-size: 1rem;
+    span {
+      color: #666;
     }
   }
 
   &__form {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.5rem;
+  }
+}
 
-    input,
-    textarea {
-      padding: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 1rem;
-      font-family: inherit;
+.form-group {
+  input, textarea {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+
+    &:focus {
+      outline: none;
+      border-color: #333;
     }
+  }
 
-    textarea {
-      min-height: 120px;
-      resize: vertical;
-    }
+  textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+}
 
-    button {
-      align-self: flex-start;
-      padding: 0.75rem 1.5rem;
-      background-color: #d3a265;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: background 0.3s;
+.form-submit {
+  background: #333;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.3s ease;
 
-      &:hover {
-        background-color: #b58a50;
-      }
-    }
+  &:hover {
+    background: #555;
   }
 }
 </style>
