@@ -1,6 +1,5 @@
 <template>
   <div class="project-detail" v-if="project">
-    <!-- Header -->
     <header class="header">
       <nav class="nav">
         <div class="nav__logo">
@@ -14,7 +13,6 @@
       </nav>
     </header>
 
-    <!-- Project Hero -->
     <section class="project-hero">
       <div class="container">
         <div class="project-hero__content">
@@ -29,7 +27,6 @@
       </div>
     </section>
 
-    <!-- Project Photos -->
     <section class="project-photos" v-if="project.photos?.length">
       <div class="container">
         <div class="photos-grid">
@@ -53,7 +50,6 @@
       </div>
     </section>
 
-    <!-- Project Location -->
     <section class="project-location" v-if="project.location">
       <div class="container">
         <h2 class="section-title">Локация проекта</h2>
@@ -71,7 +67,6 @@
       </div>
     </section>
 
-    <!-- Key Features -->
     <section class="key-features" v-if="project.keyFeatures?.length">
       <div class="container">
         <h2 class="section-title">Ключевые особенности проекта</h2>
@@ -89,7 +84,6 @@
       </div>
     </section>
 
-    <!-- Project Gallery -->
     <section class="project-gallery" v-if="project.galleryItems?.length">
       <div class="container">
         <h2 class="section-title">Галерея проекта</h2>
@@ -115,7 +109,6 @@
       </div>
     </section>
 
-    <!-- Related Projects -->
     <section class="related-projects" v-if="relatedProjects.length">
       <div class="container">
         <h2 class="section-title">Похожие проекты</h2>
@@ -139,7 +132,6 @@
       </div>
     </section>
 
-    <!-- Contact CTA -->
     <section class="project-cta">
       <div class="container">
         <div class="cta-content">
@@ -150,7 +142,6 @@
       </div>
     </section>
 
-    <!-- Lightbox -->
     <div v-if="lightboxOpen" class="lightbox" @click="closeLightbox">
       <div class="lightbox__content" @click.stop>
         <button class="lightbox__close" @click="closeLightbox">&times;</button>
