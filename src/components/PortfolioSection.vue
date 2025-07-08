@@ -37,11 +37,12 @@
       <!-- Сетка проектов -->
       <div :class="['projects__grid', { 'gallery-view': isGalleryView }]">
         <div 
-          v-for="(project, index) in filteredProjects" 
+          v-for="(project, index) in filteredProjects"
           :key="project._id || index"
           class="project-card"
           @click="openProject(project)"
         >
+         <RouterLink  :to="`/projects/${project._id}`">
           <div class="project-card__image">
             <img 
               :src="getImageUrl(project.photos[0]?.image)" 
@@ -63,13 +64,14 @@
           <div class="project-card__content">
             <h3>{{ project.title }}</h3>
             <div class="project-card__meta">
-              <span class="location">{{ project.photos.description || 'Не указано' }}</span>
+              <span class="location">{{ project.location.city || 'Не указано' }}</span>
             </div>
-            <p>{{ project.description }}</p>
+            <p>{{ project.photos[0]?.description }}</p>
             <span class="project-card__year">
               {{ new Date(project.createdAt).getFullYear() }}
             </span>
           </div>
+          </RouterLink>
         </div>
       </div>
 
@@ -101,6 +103,7 @@ const isGalleryView = ref(false)
 const getProjects = async () => {
   try {
     const res = await axios.get('http://localhost:5000/api/projects')
+    console.log(res.data)
     projects.value = res.data
   } catch (err) {
     console.error('Ошибка при загрузке проектов:', err)

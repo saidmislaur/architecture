@@ -1,5 +1,5 @@
 <template>
-  <div class="project-detail">
+  <div class="project-detail" v-if="project">
     <!-- Header -->
     <header class="header">
       <nav class="nav">
@@ -21,33 +21,30 @@
           <div class="project-hero__breadcrumb">
             <span>Проекты</span>
             <span>/</span>
-            <span>{{ project.category }}</span>
-            <span>/</span>
             <span>{{ project.title }}</span>
           </div>
-          
           <h1 class="project-hero__title">{{ project.title }}</h1>
+          <p class="project-hero__description">{{ project.description}}</p>
         </div>
       </div>
     </section>
 
     <!-- Project Photos -->
-    <section class="project-photos">
+    <section class="project-photos" v-if="project.photos?.length">
       <div class="container">
         <div class="photos-grid">
           <div 
             v-for="(photo, index) in project.photos" 
             :key="index"
-            :class="['photo-item', `photo-item--${photo.layout}`]"
+            :class="['photo-item', `photo-item--${photo.layout || 'medium'}`]"
           >
             <div class="photo-item__image">
               <img 
-                :src="photo.image" 
+                :src="formatImagePath(photo.image)" 
                 :alt="photo.title || `${project.title} - фото ${index + 1}`"
                 @click="openLightbox(index, 'photos')"
               />
             </div>
-            
             <div v-if="photo.description" class="photo-item__description">
               <p>{{ photo.description }}</p>
             </div>
@@ -57,37 +54,25 @@
     </section>
 
     <!-- Project Location -->
-    <section class="project-location">
+    <section class="project-location" v-if="project.location">
       <div class="container">
         <h2 class="section-title">Локация проекта</h2>
         <div class="location-content">
           <div class="location-info">
-            <div class="location-item">
-              <strong>Адрес:</strong>
-              <span>{{ project.location.address }}</span>
-            </div>
-            <div class="location-item">
-              <strong>Район:</strong>
-              <span>{{ project.location.district }}</span>
-            </div>
-            <div class="location-item">
-              <strong>Город:</strong>
-              <span>{{ project.location.city }}</span>
-            </div>
-            <div class="location-item">
-              <strong>Площадь участка:</strong>
-              <span>{{ project.location.plotArea }}</span>
-            </div>
+            <div class="location-item"><strong>Адрес:</strong> <span>{{ project.location.address }}</span></div>
+            <div class="location-item"><strong>Район:</strong> <span>{{ project.location.district }}</span></div>
+            <div class="location-item"><strong>Город:</strong> <span>{{ project.location.city }}</span></div>
+            <div class="location-item"><strong>Площадь участка:</strong> <span>{{ project.location.plotArea }}</span></div>
           </div>
-          <div class="location-map">
-            <img :src="project.location.mapImage" alt="Карта локации" />
+          <div class="location-map" v-if="project.location.mapImage">
+            <img :src="formatImagePath(project.location.mapImage)" alt="Карта локации" />
           </div>
         </div>
       </div>
     </section>
 
     <!-- Key Features -->
-    <section class="key-features">
+    <section class="key-features" v-if="project.keyFeatures?.length">
       <div class="container">
         <h2 class="section-title">Ключевые особенности проекта</h2>
         <div class="features-grid">
@@ -96,9 +81,7 @@
             :key="feature.title"
             class="feature-card"
           >
-            <div class="feature-card__icon">
-              <span>{{ feature.icon }}</span>
-            </div>
+            <div class="feature-card__icon"><span>{{ feature.icon }}</span></div>
             <h3>{{ feature.title }}</h3>
             <p>{{ feature.description }}</p>
           </div>
@@ -107,24 +90,22 @@
     </section>
 
     <!-- Project Gallery -->
-    <section class="project-gallery">
+    <section class="project-gallery" v-if="project.galleryItems?.length">
       <div class="container">
         <h2 class="section-title">Галерея проекта</h2>
-        
         <div class="gallery-grid">
           <div 
             v-for="(item, index) in project.galleryItems" 
             :key="index"
-            :class="['gallery-item', `gallery-item--${item.layout}`]"
+            :class="['gallery-item', `gallery-item--${item.layout || 'medium'}`]"
           >
             <div class="gallery-item__image">
               <img 
-                :src="item.image" 
+                :src="formatImagePath(item.image)" 
                 :alt="item.title || `${project.title} - изображение ${index + 1}`"
                 @click="openLightbox(index)"
               />
             </div>
-            
             <div v-if="item.title || item.description" class="gallery-item__content">
               <h3 v-if="item.title">{{ item.title }}</h3>
               <p v-if="item.description">{{ item.description }}</p>
@@ -135,10 +116,9 @@
     </section>
 
     <!-- Related Projects -->
-    <section class="related-projects">
+    <section class="related-projects" v-if="relatedProjects.length">
       <div class="container">
         <h2 class="section-title">Похожие проекты</h2>
-        
         <div class="related-grid">
           <div 
             v-for="relatedProject in relatedProjects" 
@@ -174,239 +154,141 @@
     <div v-if="lightboxOpen" class="lightbox" @click="closeLightbox">
       <div class="lightbox__content" @click.stop>
         <button class="lightbox__close" @click="closeLightbox">&times;</button>
-        
+
         <div class="lightbox__image">
           <img 
-            :src="currentLightboxSection === 'photos' ? project.photos[currentLightboxIndex].image : project.galleryItems[currentLightboxIndex].image"
-            :alt="currentLightboxSection === 'photos' ? project.photos[currentLightboxIndex].title || project.title : project.galleryItems[currentLightboxIndex].title || project.title"
+            :src="formatImagePath(currentImage?.image)" 
+            :alt="currentImage?.title || project.title" 
           />
         </div>
-        
-        <div class="lightbox__info">
-          <h3 v-if="currentLightboxSection === 'photos' ? project.photos[currentLightboxIndex].title : project.galleryItems[currentLightboxIndex].title">
-            {{ currentLightboxSection === 'photos' ? project.photos[currentLightboxIndex].title : project.galleryItems[currentLightboxIndex].title }}
-          </h3>
-          <p v-if="currentLightboxSection === 'photos' ? project.photos[currentLightboxIndex].description : project.galleryItems[currentLightboxIndex].description">
-            {{ currentLightboxSection === 'photos' ? project.photos[currentLightboxIndex].description : project.galleryItems[currentLightboxIndex].description }}
-          </p>
+
+        <div class="lightbox__info" v-if="currentImage?.title || currentImage?.description">
+          <h3 v-if="currentImage?.title">{{ currentImage.title }}</h3>
+          <p v-if="currentImage?.description">{{ currentImage.description }}</p>
         </div>
-        
+
         <button 
-          v-if="(currentLightboxSection === 'photos' ? project.photos.length : project.galleryItems.length) > 1"
+          v-if="lightboxImages.length > 1"
           @click="prevLightboxImage" 
           class="lightbox__nav lightbox__nav--prev"
-        >
-          ‹
-        </button>
+        >‹</button>
         <button 
-          v-if="(currentLightboxSection === 'photos' ? project.photos.length : project.galleryItems.length) > 1"
+          v-if="lightboxImages.length > 1"
           @click="nextLightboxImage" 
           class="lightbox__nav lightbox__nav--next"
-        >
-          ›
-        </button>
-        
+        >›</button>
+
         <div class="lightbox__counter">
-          {{ currentLightboxIndex + 1 }} / {{ (currentLightboxSection === 'photos' ? project.photos.length : project.galleryItems.length) }}
+          {{ currentLightboxIndex + 1 }} / {{ lightboxImages.length }}
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<script>
-import { ref, reactive, onMounted } from 'vue'
+<script setup>
+import { ref, onMounted, computed } from 'vue'
+import { useRoute } from 'vue-router'
+import axios from 'axios'
 
-export default {
-  name: 'ProjectDetail',
-  setup() {
-    const lightboxOpen = ref(false)
-    const currentLightboxIndex = ref(0)
-    const currentLightboxSection = ref('gallery')
-    
-    const project = reactive({
-      id: 1,
-      title: 'Современный дом в стиле минимализм',
-      type: 'Жилая архитектура',
-      category: 'residential',
-      photos: [
-        {
-          image: 'https://s0.rbk.ru/v6_top_pics/media/img/2/24/347126512643242.jpeg',
-          layout: 'large',
-          description: 'Главный фасад дома с панорамными окнами и террасой. Использование натурального камня и дерева создает теплую и современную атмосферу.'
-        },
-        {
-          image: 'https://s0.rbk.ru/v6_top_pics/media/img/2/24/347126512643242.jpeg',
-          layout: 'medium',
-          description: 'Открытое пространство гостиной с камином и выходом на террасу.'
-        },
-        {
-          image: 'https://s0.rbk.ru/v6_top_pics/media/img/2/24/347126512643242.jpeg',
-          layout: 'medium',
-          description: 'Современная кухня с островом и встроенной техникой.'
-        },
-        {
-          image: 'https://s0.rbk.ru/v6_top_pics/media/img/2/24/347126512643242.jpeg',
-          layout: 'large'
-        }
-      ],
-      location: {
-        address: 'ул. Рублевская, 45',
-        district: 'Рублевка',
-        city: 'Москва',
-        plotArea: '2000 м²',
-        mapImage: 'https://s0.rbk.ru/v6_top_pics/media/img/2/24/347126512643242.jpeg'
-      },
-      keyFeatures: [
-        {
-          icon: '🏠',
-          title: 'Минималистичный дизайн',
-          description: 'Чистые линии и открытые пространства создают ощущение простора и света'
-        },
-        {
-          icon: '🌿',
-          title: 'Экологичность',
-          description: 'Использование натуральных материалов и энергоэффективных решений'
-        },
-        {
-          icon: '💡',
-          title: 'Умный дом',
-          description: 'Интегрированная система автоматизации освещения, климата и безопасности'
-        },
-        {
-          icon: '🪟',
-          title: 'Панорамные окна',
-          description: 'Окна от пола до потолка обеспечивают максимальное естественное освещение'
-        }
-      ],
-      galleryItems: [
-        {
-          image: 'https://s0.rbk.ru/v6_top_pics/media/img/2/24/347126512643242.jpeg',
-          title: 'Спальня'
-        },
-        {
-          image: 'https://s0.rbk.ru/v6_top_pics/media/img/2/24/347126512643242.jpeg',
-          title: 'Ванная комната'
-        },
-        {
-          image: 'https://s0.rbk.ru/v6_top_pics/media/img/2/24/347126512643242.jpeg',
-          title: 'Рабочий кабинет'
-        },
-        {
-          image: 'https://s0.rbk.ru/v6_top_pics/media/img/2/24/347126512643242.jpeg',
-          title: 'Терраса и сад'
-        },
-        {
-          image: 'https://s0.rbk.ru/v6_top_pics/media/img/2/24/347126512643242.jpeg',
-          title: 'Ночная подсветка'
-        },
-        {
-          image: 'https://s0.rbk.ru/v6_top_pics/media/img/2/24/347126512643242.jpeg',
-          title: 'Внутренний двор'
-        }
-      ]
-    })
+const route = useRoute()
+const project = ref({})
+const lightboxOpen = ref(false)
+const currentLightboxIndex = ref(0)
+const currentLightboxSection = ref('gallery')
+const relatedProjects = ref([
+  {
+    id: 2,
+    title: 'Частная вилла',
+    type: 'Жилая архитектура',
+    year: '2023',
+    image: 'https://s0.rbk.ru/v6_top_pics/media/img/2/24/347126512643242.jpeg'
+  },
+  {
+    id: 3,
+    title: 'Эко-дом',
+    type: 'Жилая архитектура',
+    year: '2024',
+    image: 'https://s0.rbk.ru/v6_top_pics/media/img/2/24/347126512643242.jpeg'
+  },
+  {
+    id: 4,
+    title: 'Загородный дом',
+    type: 'Жилая архитектура',
+    year: '2022',
+    image: 'https://s0.rbk.ru/v6_top_pics/media/img/2/24/347126512643242.jpeg'
+  }
+])
 
-    const relatedProjects = ref([
-      {
-        id: 2,
-        title: 'Частная вилла',
-        type: 'Жилая архитектура',
-        year: '2023',
-        image: 'https://s0.rbk.ru/v6_top_pics/media/img/2/24/347126512643242.jpeg'
-      },
-      {
-        id: 3,
-        title: 'Эко-дом',
-        type: 'Жилая архитектура',
-        year: '2024',
-        image: 'https://s0.rbk.ru/v6_top_pics/media/img/2/24/347126512643242.jpeg'
-      },
-      {
-        id: 4,
-        title: 'Загородный дом',
-        type: 'Жилая архитектура',
-        year: '2022',
-        image: 'https://s0.rbk.ru/v6_top_pics/media/img/2/24/347126512643242.jpeg'
-      }
-    ])
-
-    const openLightbox = (index, section = 'gallery') => {
-      if (section === 'photos') {
-        // Открыть лайтбокс для фотографий проекта
-        currentLightboxIndex.value = index
-        currentLightboxSection.value = 'photos'
-      } else {
-        // Открыть лайтбокс для галереи
-        currentLightboxIndex.value = index
-        currentLightboxSection.value = 'gallery'
-      }
-      lightboxOpen.value = true
-      document.body.style.overflow = 'hidden'
-    }
-
-    const closeLightbox = () => {
-      lightboxOpen.value = false
-      document.body.style.overflow = 'auto'
-    }
-
-    const nextLightboxImage = () => {
-      currentLightboxIndex.value = (currentLightboxIndex.value + 1) % (currentLightboxSection.value === 'photos' ? project.photos.length : project.galleryItems.length)
-    }
-
-    const prevLightboxImage = () => {
-      currentLightboxIndex.value = currentLightboxIndex.value === 0 
-        ? (currentLightboxSection.value === 'photos' ? project.photos.length : project.galleryItems.length) - 1 
-        : currentLightboxIndex.value - 1
-    }
-
-    const goBack = () => {
-      // В реальном приложении здесь был бы роутер
-      window.history.back()
-    }
-
-    const loadProject = (newProject) => {
-      // В реальном приложении здесь была бы загрузка нового проекта
-      console.log('Loading project:', newProject.title)
-    }
-
-    // Обработка клавиш для лайтбокса
-    const handleKeydown = (event) => {
-      if (!lightboxOpen.value) return
-      
-      switch (event.key) {
-        case 'Escape':
-          closeLightbox()
-          break
-        case 'ArrowLeft':
-          prevLightboxImage()
-          break
-        case 'ArrowRight':
-          nextLightboxImage()
-          break
-      }
-    }
-
-    onMounted(() => {
-      document.addEventListener('keydown', handleKeydown)
-    })
-
-    return {
-      project,
-      relatedProjects,
-      lightboxOpen,
-      currentLightboxIndex,
-      currentLightboxSection,
-      openLightbox,
-      closeLightbox,
-      nextLightboxImage,
-      prevLightboxImage,
-      goBack,
-      loadProject
-    }
+const fetchProject = async () => {
+  try {
+    const res = await axios.get(`http://localhost:5000/api/projects/${route.params.id}`)
+    project.value = res.data
+  } catch (err) {
+    console.error('Ошибка при загрузке проекта:', err)
   }
 }
+
+const formatImagePath = (path) => {
+  if (!path) return ''
+  return path.startsWith('http') ? path : `http://localhost:5000${path}`
+}
+
+const openLightbox = (index, section = 'gallery') => {
+  currentLightboxSection.value = section
+  currentLightboxIndex.value = index
+  lightboxOpen.value = true
+  document.body.style.overflow = 'hidden'
+}
+
+const closeLightbox = () => {
+  lightboxOpen.value = false
+  document.body.style.overflow = 'auto'
+}
+
+const nextLightboxImage = () => {
+  currentLightboxIndex.value = (currentLightboxIndex.value + 1) % lightboxImages.value.length
+}
+
+const prevLightboxImage = () => {
+  currentLightboxIndex.value = currentLightboxIndex.value === 0
+    ? lightboxImages.value.length - 1
+    : currentLightboxIndex.value - 1
+}
+
+const lightboxImages = computed(() => {
+  return currentLightboxSection.value === 'photos'
+    ? project.value.photos || []
+    : project.value.galleryItems || []
+})
+
+const currentImage = computed(() => {
+  return lightboxImages.value[currentLightboxIndex.value]
+})
+
+const goBack = () => {
+  window.history.back()
+}
+
+const loadProject = (newProject) => {
+  console.log('Loading project:', newProject.title)
+}
+
+const handleKeydown = (event) => {
+  if (!lightboxOpen.value) return
+  switch (event.key) {
+    case 'Escape': closeLightbox(); break
+    case 'ArrowLeft': prevLightboxImage(); break
+    case 'ArrowRight': nextLightboxImage(); break
+  }
+}
+
+onMounted(() => {
+  fetchProject()
+  document.addEventListener('keydown', handleKeydown)
+})
 </script>
+
 
 <style lang="scss">
 * {

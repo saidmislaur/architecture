@@ -110,6 +110,14 @@
                   />
                 </div>
                 <div class="form-group">
+                  <label>Описание проекта</label>
+                  <input 
+                    v-model="currentProject.description" 
+                    type="text" 
+                    class="form-input"
+                  />
+                </div>
+                <div class="form-group">
                   <label>Тип проекта</label>
                   <input 
                     v-model="currentProject.type" 
@@ -166,10 +174,11 @@
                   />
                 </div>
                 <div class="form-group">
-                  <label>Район</label>
+                  <label>Район *</label>
                   <input 
                     v-model="currentProject.location.district" 
                     type="text" 
+                    required
                     class="form-input"
                   />
                 </div>
@@ -183,10 +192,11 @@
                   />
                 </div>
                 <div class="form-group">
-                  <label>Площадь участка</label>
+                  <label>Площадь участка *</label>
                   <input 
                     v-model="currentProject.location.plotArea" 
                     type="text" 
+                    required
                     class="form-input"
                   />
                 </div>
@@ -384,6 +394,7 @@ const notification = reactive({
 
 const currentProject = reactive({
   title: '',
+  description: '',
   type: '',
   category: '',
   status: 'draft',
@@ -426,7 +437,6 @@ const fetchProjects = async () => {
   try {
     loading.value = true
     const { data } = await axios.get(`${API_BASE}/projects`)
-    console.log(data)
     projects.value = data
   } catch (e) {
     showNotification('Ошибка загрузки проектов', 'error')
@@ -453,11 +463,6 @@ const saveProject = async () => {
       : `${API_BASE}/projects`
 
     const method = editingProjectId.value ? 'put' : 'post'
-
-     // Удаляем _id при создании
-    if (!editingProjectId.value) {
-      delete projectData._id
-    }
 
     await axios[method](url, currentProject)
 
@@ -507,6 +512,7 @@ const editProject = (project) => {
 const resetForm = () => {
   Object.assign(currentProject, {
     title: '',
+    description: '',
     type: '',
     category: '',
     status: 'draft',
