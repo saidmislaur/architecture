@@ -2,9 +2,11 @@
   <div class="project-detail" v-if="project">
     <header class="header">
       <nav class="nav">
-        <div class="nav__logo">
-          <h1>ARCH STUDIO</h1>
-        </div>
+        <RouterLink to="/">
+           <div class="nav__logo">
+            <h1>ARCH STUDIO</h1>
+          </div>
+        </RouterLink>
         <div class="nav__back">
           <button @click="goBack" class="back-btn">
             ← Назад к проектам

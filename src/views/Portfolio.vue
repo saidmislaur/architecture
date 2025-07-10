@@ -4,26 +4,9 @@
 
     <div v-if="loading" class="loading">Загрузка...</div>
     <div v-else class="portfolio-page__projects">
-        <h1>Мои проекты</h1>
-        <div   class="projects-grid">
-         <RouterLink v-for="project in projects" :to="{ name: 'project-details', params: { id: project._id } }">
-            <div
-                class="project-card"
-                :key="project._id"
-                @click="goToProject(project._id)"
-            >
-                <img
-                v-if="project.images && project.images.length"
-                :src="project.images"
-                alt="Project Cover"
-                />
-                <h3>{{ project.title }}</h3>
-                <p>{{ project.description }}</p>
-            </div>
-         </RouterLink>
+        <PortfolioSection :projects="projects"/>
     </div>
     </div>
-  </div>
 </template>
 
 <script setup>
@@ -32,6 +15,7 @@ import axios from 'axios'
 import { useRouter } from 'vue-router'
 
 import Header from '../components/Header.vue';
+import PortfolioSection from '../components/PortfolioSection.vue';
 
 const router = useRouter()
 const projects = ref([])
@@ -61,11 +45,6 @@ onMounted(fetchProjects)
 
 <style scoped lang="scss">
 .portfolio-page {
-
-  h1 {
-    font-size: 2rem;
-    margin-bottom: 2rem;
-  }
 
   .loading {
     font-size: 1.2rem;

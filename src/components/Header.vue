@@ -1,14 +1,24 @@
 <template>
   <header class="header">
       <nav class="nav">
-        <div class="nav__logo">
-          <h1>ARCH STUDIO</h1>
-        </div>
+        <RouterLink to="/">
+            <div class="nav__logo">
+              <h1>ARCH STUDIO</h1>
+            </div>
+        </RouterLink>
         <ul class="nav__menu">
-          <li><a href="#projects" @click="activeSection = 'projects'">Проекты</a></li>
-          <li><a href="#about" @click="activeSection = 'about'">О нас</a></li>
-          <li><a href="#services" @click="activeSection = 'services'">Услуги</a></li>
-          <li><a href="#contact" @click="activeSection = 'contact'">Контакты</a></li>
+          <RouterLink to="#projects">
+              <li  @click="activeSection = 'projects'">Проекты</li>
+          </RouterLink>
+          <RouterLink to="#about">
+              <li @click="activeSection = 'about'">О нас</li>
+          </RouterLink>
+          <RouterLink to="#services">
+              <li @click="activeSection = 'services'">Услуги</li>
+          </RouterLink>
+          <RouterLink to="#contact">
+              <li @click="activeSection = 'contact'">Контакты</li>
+          </RouterLink>
         </ul>
         <button class="nav__toggle" @click="menuOpen = !menuOpen">
           <span></span>
@@ -17,16 +27,6 @@
         </button>
       </nav>
     </header>
-  <!-- <header class="header">
-    <h1 class="logo">Architecture</h1>
-    <nav class="nav">
-      <RouterLink to="/">Главная</RouterLink>
-      <RouterLink to="/about">О нас</RouterLink>
-      <RouterLink to="/projects">Проекты</RouterLink>
-      <RouterLink to="/team">Команда</RouterLink>
-      <RouterLink to="/contact">Контакты</RouterLink>
-    </nav>
-  </header> -->
 </template>
 
 <script setup lang="ts">

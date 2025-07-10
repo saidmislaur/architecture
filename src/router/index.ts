@@ -1,11 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Home from '../views/Home.vue';
 import Admin from '../views/AdminDashboard.vue';
-import Portfolio from '../views/Portfolio.vue';
+import Projects from '../views/Portfolio.vue';
 // import ProjectDetailsPage from '../components/ProjectDetailsPage.vue';
 import ProjectDetailPage from '../views/ProjectDetailPage.vue';
-import AdminPosts from '../components/admin/AdminPosts.vue';
-import ProjectEditor from '../components/admin/ProjectEditor.vue';
 
 const routes = [
   {
@@ -20,7 +18,7 @@ const routes = [
   },
   { 
     path: '/projects', 
-    component: Portfolio, 
+    component: Projects, 
     name: 'project' 
   },
   { 
@@ -28,26 +26,19 @@ const routes = [
     component: ProjectDetailPage, 
     name: 'project-details' 
   },
-  {
-    path: '/admin/projects',
-    component: AdminPosts,
-    name: 'admin-projects'
-  },
-  {
-    path: '/admin/posts/edit/:id',
-    component: ProjectEditor,
-    name: 'admin-edit'
-  },
-  {
-    path: '/admin/posts/new',
-    component: ProjectEditor,
-    name: 'create-edit'
-  }
 ];
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
+  scrollBehavior(to) {
+    if (to.hash) {
+      return {
+        el: to.hash,
+        behavior: 'smooth'
+      }
+    }
+  }
 });
 
 export default router;

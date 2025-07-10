@@ -3,7 +3,6 @@
     <div class="container">
       <h2 class="section-title">Портфолио проектов</h2>
 
-      <!-- Поиск и фильтры -->
       <div class="projects__controls">
         <div class="projects__search">
           <input 
@@ -34,7 +33,6 @@
         Найдено проектов: {{ filteredProjects.length }}
       </div>
 
-      <!-- Сетка проектов -->
       <div :class="['projects__grid', { 'gallery-view': isGalleryView }]">
         <div 
           v-for="(project, index) in filteredProjects"
@@ -74,8 +72,12 @@
           </RouterLink>
         </div>
       </div>
+      <div v-if="props.limit" class="projects__btn">
+        <RouterLink to="/projects">
+          <Button value="Показать больше"/>
+        </RouterLink>
+      </div>
 
-      <!-- Пустое состояние -->
       <div v-if="filteredProjects.length === 0" class="empty-state">
         <h3>Проекты не найдены</h3>
         <p>Попробуйте изменить параметры поиска или фильтры</p>
@@ -94,24 +96,26 @@
 import { ref, onMounted, computed, reactive } from 'vue'
 import axios from 'axios'
 
-const projects = ref([])
+import Button from './Button.vue'
+
+const props = defineProps({
+  projects: Array,
+  limit: Number,
+  value: String,
+})
+
 const activeFilter = ref('all')
 const searchQuery = ref('')
 const sortBy = ref('year')
 const isGalleryView = ref(false)
 
-const getProjects = async () => {
-  try {
-    const res = await axios.get('http://localhost:5000/api/projects')
-    console.log(res.data)
-    projects.value = res.data
-  } catch (err) {
-    console.error('Ошибка при загрузке проектов:', err)
-  }
-}
+const displayedProjects = computed(() => {
+  if (!props.limit) return props.projects
+  return props.projects.slice(0, props.limit)
+})
 
 const filteredProjects = computed(() => {
-  let filtered = [...projects.value]
+  let filtered = [...displayedProjects.value]
 
   if (activeFilter.value !== 'all') {
     filtered = filtered.filter(p => p.category === activeFilter.value)
@@ -151,9 +155,7 @@ const getImageUrl = (path) => {
   return `http://localhost:5000${path}`
 }
 
-onMounted(() => {
-  getProjects()
-})
+
 </script>
 
 <style scoped lang="scss">
@@ -166,6 +168,11 @@ onMounted(() => {
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2rem;
     margin-top: 2rem;
+  }
+
+  &__btn {
+    margin-top: 20px;
+    text-align: center;
   }
 }
 

@@ -4,7 +4,7 @@
 
     <MainSection />
     
-    <PortfolioSection />
+    <PortfolioSection :projects="projects" :limit="3" :button="Button"/>
 
     <AboutSection />
     
@@ -25,8 +25,24 @@ import AboutSection from '../components/AboutSection.vue'
 import Services from '../components/Services.vue'
 import ContactSection from '../components/ContactSection.vue'
 import Footer from '../components/Footer.vue'
+import Button from '../components/Button.vue'
+
+import axios from 'axios'
+
+const projects = ref([])
 
 
+const getProjects = async () => {
+  try {
+    const res = await axios.get('http://localhost:5000/api/projects')
+    console.log(res.data)
+    projects.value = res.data
+  } catch (err) {
+    console.error('Ошибка при загрузке проектов:', err)
+  }
+}
+
+onMounted(getProjects);
 </script>
 
 

@@ -6,10 +6,18 @@
             <h3>ARCH STUDIO</h3>
           </div>
           <div class="footer__links">
-            <a href="#projects">Проекты</a>
-            <a href="#about">О нас</a>
-            <a href="#services">Услуги</a>
-            <a href="#contact">Контакты</a>
+             <RouterLink to="#projects">
+                Проекты
+              </RouterLink>
+              <RouterLink to="#about">
+                О нас
+              </RouterLink>
+              <RouterLink to="#services">
+                Сервисы
+              </RouterLink>
+              <RouterLink to="#contact">
+                Контакты
+              </RouterLink>
           </div>
           <div class="footer__social">
             <a href="#" aria-label="Instagram">IG</a>
