@@ -1,20 +1,16 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Home from '../views/Home.vue';
-import Admin from '../views/AdminDashboard.vue';
+import Admin from '../views/Admin/AdminDashboard.vue';
+import AdminLogin from '../views/Admin/AdminLogin.vue'
 import Projects from '../views/Portfolio.vue';
-// import ProjectDetailsPage from '../components/ProjectDetailsPage.vue';
 import ProjectDetailPage from '../views/ProjectDetailPage.vue';
+import {getToken} from '../utils/auth';
 
 const routes = [
   {
     path: '/',
     name: 'Home',
     component: Home,
-  },
-  {
-    path: '/admin-dashboard',
-    name: 'Admin',
-    component: Admin,
   },
   { 
     path: '/projects', 
@@ -26,6 +22,17 @@ const routes = [
     component: ProjectDetailPage, 
     name: 'project-details' 
   },
+  {
+    path: '/admin-dashboard',
+    component: Admin,
+    name: 'admin',
+     meta: { requiresAuth: true }
+  },
+  {
+    path: '/admin-login',
+    component: AdminLogin,
+    name: 'admin-login',
+  }
 ];
 
 const router = createRouter({
@@ -41,4 +48,12 @@ const router = createRouter({
   }
 });
 
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = !!getToken()
+  if(to.meta.requiresAuth && !isAuthenticated) {
+    next('/admin-login')
+  } else {
+    next()
+  }
+})
 export default router;

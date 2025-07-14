@@ -8,6 +8,9 @@
             <span class="stat-number">{{ stats.totalProjects }}</span>
             <span class="stat-label">Проектов</span>
           </div>
+          <div class="admin-logout">
+            <button @click="logout">Выход</button>
+          </div>
         </div>
       </div>
     </header>
@@ -373,8 +376,13 @@
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue'
 import axios from 'axios'
+import { useRouter } from 'vue-router'
+import { removeItem } from '../../utils/auth'
 
 const API_BASE = 'http://localhost:5000/api'
+
+const router = useRouter()
+
 
 const currentView = ref('list')
 const loading = ref(false)
@@ -614,6 +622,11 @@ const showNotification = (msg, type = 'success') => {
   }, 3000)
 }
 
+const logout = () => {
+  removeItem()
+  router.push('/admin-login')
+}
+
 onMounted(() => {
   fetchProjects()
   fetchStats()
@@ -676,6 +689,28 @@ body {
   .stat-label {
     font-size: 0.8rem;
     opacity: 0.8;
+  }
+}
+
+//admin-btn 
+.admin-logout {
+  display: flex;
+  align-items: center; 
+
+  button {
+    padding: 10px 40px;
+    background-color: #e4e0e0;
+    border: none;
+    border-radius: 5px;
+    color: rgb(26, 25, 25);
+    font-size: 12px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.1s ease-in-out;
+
+    &:hover {
+      background-color: #cbcbcb;
+    }
   }
 }
 
