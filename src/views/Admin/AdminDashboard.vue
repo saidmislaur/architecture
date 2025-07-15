@@ -508,7 +508,7 @@ const uploadImage = async (file) => {
   return data.imageUrl
 }
 
-// --- Form Methods ---
+
 const editProject = (project) => {
   Object.assign(currentProject, JSON.parse(JSON.stringify(project)))
   editingProjectId.value = project._id
@@ -586,7 +586,7 @@ const removeFeature = (i) => {
   currentProject.keyFeatures.splice(i, 1)
 }
 
-// --- Utilities ---
+
 const getImageUrl = (path) => {
   if (!path) return 'https://s0.rbk.ru/v6_top_pics/media/img/2/24/347126512643242.jpeg'
   if (path.startsWith('http')) return path
@@ -652,7 +652,7 @@ body {
   padding: 0 20px;
 }
 
-// Admin Header
+
 .admin-header {
   background: #333;
   color: white;
@@ -712,7 +712,7 @@ body {
   }
 }
 
-// Admin Navigation
+
 .admin-nav {
   background: white;
   border-bottom: 1px solid #eee;
@@ -743,12 +743,12 @@ body {
   }
 }
 
-// Main Content
+
 .admin-main {
   padding: 2rem 0;
 }
 
-// Projects List
+
 .list-header {
   display: flex;
   justify-content: space-between;
@@ -855,7 +855,7 @@ body {
   color: #666;
 }
 
-// Buttons
+
 .btn {
   padding: 0.5rem 1rem;
   border: none;
@@ -912,7 +912,7 @@ body {
   }
 }
 
-// Form Styles
+
 .form-header {
   display: flex;
   justify-content: space-between;
@@ -978,7 +978,7 @@ body {
   min-height: 80px;
 }
 
-// Photos Manager
+
 .photos-manager {
   display: flex;
   flex-direction: column;
@@ -1043,7 +1043,7 @@ body {
   display: none;
 }
 
-// Features Manager
+
 .features-manager {
   display: flex;
   flex-direction: column;
@@ -1056,7 +1056,7 @@ body {
   border-radius: 8px;
 }
 
-// Gallery Manager
+
 .gallery-manager {
   display: flex;
   flex-direction: column;
@@ -1099,7 +1099,7 @@ body {
   border-radius: 8px;
 }
 
-// Form Actions
+
 .form-actions {
   display: flex;
   gap: 1rem;
@@ -1109,7 +1109,7 @@ body {
   border-top: 1px solid #eee;
 }
 
-// Empty State
+
 .empty-state {
   text-align: center;
   padding: 3rem;
@@ -1120,7 +1120,7 @@ body {
   }
 }
 
-// Loading
+
 .loading-overlay {
   position: fixed;
   top: 0;
@@ -1148,7 +1148,7 @@ body {
   100% { transform: rotate(360deg); }
 }
 
-// Notification
+
 .notification {
   position: fixed;
   top: 20px;
@@ -1179,7 +1179,7 @@ body {
   }
 }
 
-// Responsive
+
 @media (max-width: 768px) {
   .list-header {
     flex-direction: column;

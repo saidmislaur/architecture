@@ -69,7 +69,6 @@ body {
   padding: 0 20px;
 }
 
-// Sections
 .section-title {
   font-size: 2.5rem;
   font-weight: 300;
@@ -77,7 +76,6 @@ body {
   text-align: center;
 }
 
-// Responsive Design
 @media (max-width: 768px) {
   .nav {
     &__menu {

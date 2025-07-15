@@ -302,7 +302,6 @@ body {
   padding: 0 20px;
 }
 
-// Header
 .header {
   position: fixed;
   top: 0;
@@ -345,7 +344,6 @@ body {
   }
 }
 
-// Project Hero
 .project-hero {
   padding: 8rem 0 4rem;
   background: #f8f9fa;
@@ -415,7 +413,6 @@ body {
   font-size: 0.8rem;
 }
 
-// Project Photos
 .project-photos {
   padding: 4rem 0;
 }
@@ -474,7 +471,6 @@ body {
   }
 }
 
-// Project Location
 .project-location {
   padding: 4rem 0;
   background: #f8f9fa;
@@ -520,7 +516,6 @@ body {
   }
 }
 
-// Key Features
 .key-features {
   padding: 4rem 0;
 }
@@ -560,7 +555,6 @@ body {
   }
 }
 
-// Project Gallery
 .project-gallery {
   padding: 4rem 0;
   background: #f8f9fa;
@@ -643,7 +637,6 @@ body {
   }
 }
 
-// Project Details
 .project-details {
   padding: 4rem 0;
 }
@@ -687,7 +680,6 @@ body {
   }
 }
 
-// Related Projects
 .related-projects {
   padding: 4rem 0;
   background: #f8f9fa;
@@ -755,7 +747,6 @@ body {
   }
 }
 
-// Project CTA
 .project-cta {
   padding: 4rem 0;
   background: #333;
@@ -796,7 +787,6 @@ body {
   }
 }
 
-// Lightbox
 .lightbox {
   position: fixed;
   top: 0;
@@ -913,7 +903,6 @@ body {
   font-size: 0.9rem;
 }
 
-// Responsive Design
 @media (max-width: 768px) {
   .overview-grid {
     grid-template-columns: 1fr;
