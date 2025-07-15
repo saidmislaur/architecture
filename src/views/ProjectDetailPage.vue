@@ -57,10 +57,10 @@
         <h2 class="section-title">Локация проекта</h2>
         <div class="location-content">
           <div class="location-info">
-            <div class="location-item"><strong>Адрес:</strong> <span>{{ project.location.address }}</span></div>
-            <div class="location-item"><strong>Район:</strong> <span>{{ project.location.district }}</span></div>
-            <div class="location-item"><strong>Город:</strong> <span>{{ project.location.city }}</span></div>
-            <div class="location-item"><strong>Площадь участка:</strong> <span>{{ project.location.plotArea }}</span></div>
+            <div v-if="project.location.address" class="location-item"><strong>Адрес:</strong> <span>{{ project.location.address }}</span></div>
+            <div v-if="project.location.district" class="location-item"><strong>Район:</strong> <span>{{ project.location.district }}</span></div>
+            <div v-if="project.location.city" class="location-item"><strong>Город:</strong> <span>{{ project.location.city }}</span></div>
+            <div v-if="project.location.plotArea" class="location-item"><strong>Площадь участка:</strong> <span>{{ project.location.plotArea }}</span></div>
           </div>
           <div class="location-map" v-if="project.location.mapImage">
             <img :src="formatImagePath(project.location.mapImage)" alt="Карта локации" />

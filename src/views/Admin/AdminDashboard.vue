@@ -181,7 +181,6 @@
                   <input 
                     v-model="currentProject.location.district" 
                     type="text" 
-                    required
                     class="form-input"
                   />
                 </div>
@@ -199,7 +198,6 @@
                   <input 
                     v-model="currentProject.location.plotArea" 
                     type="text" 
-                    required
                     class="form-input"
                   />
                 </div>
