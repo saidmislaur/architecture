@@ -184,6 +184,8 @@ import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import axios from 'axios'
 
+import { API_URL } from '../api/config'
+
 const route = useRoute()
 const project = ref({})
 const lightboxOpen = ref(false)
@@ -215,7 +217,7 @@ const relatedProjects = ref([
 
 const fetchProject = async () => {
   try {
-    const res = await axios.get(`http://localhost:5000/api/projects/${route.params.id}`)
+    const res = await axios.get(`${API_URL}/api/projects/${route.params.id}`)
     project.value = res.data
   } catch (err) {
     console.error('Ошибка при загрузке проекта:', err)
@@ -224,7 +226,7 @@ const fetchProject = async () => {
 
 const formatImagePath = (path) => {
   if (!path) return ''
-  return path.startsWith('http') ? path : `http://localhost:5000${path}`
+  return path.startsWith('http') ? path : `${API_URL}${path}`
 }
 
 const openLightbox = (index, section = 'gallery') => {

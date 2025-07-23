@@ -377,7 +377,8 @@ import axios from 'axios'
 import { useRouter } from 'vue-router'
 import { removeItem } from '../../utils/auth'
 
-const API_BASE = 'http://localhost:5000/api'
+import { API_URL } from '../api/config'
+
 
 const router = useRouter()
 
@@ -590,7 +591,7 @@ const removeFeature = (i) => {
 const getImageUrl = (path) => {
   if (!path) return 'https://s0.rbk.ru/v6_top_pics/media/img/2/24/347126512643242.jpeg'
   if (path.startsWith('http')) return path
-  return `http://localhost:5000${path}`
+  return `${API_URL}${path}`
 }
 
 const handleImageError = (e) => {

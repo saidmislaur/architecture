@@ -26,7 +26,7 @@ import Services from '../components/Services.vue'
 import ContactSection from '../components/ContactSection.vue'
 import Footer from '../components/Footer.vue'
 import Button from '../components/Button.vue'
-import BaseURL from '../api/api.ts'
+import { API_URL } from '../api/config'
 
 import axios from 'axios'
 
@@ -35,7 +35,7 @@ const projects = ref([])
 
 const getProjects = async () => {
   try {
-    const res = await axios.get(`${BaseURL}/api/projects`)
+    const res = await axios.get(`${API_URL}/api/projects`)
     console.log(res.data)
     projects.value = res.data
   } catch (err) {

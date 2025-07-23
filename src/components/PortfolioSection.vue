@@ -97,6 +97,7 @@ import { ref, onMounted, computed, reactive } from 'vue'
 import axios from 'axios'
 
 import Button from './Button.vue'
+import { API_URL } from '../api/config'
 
 const props = defineProps({
   projects: Array,
@@ -152,7 +153,7 @@ const openProject = (project) => {
 const getImageUrl = (path) => {
   if (!path) return 'https://s0.rbk.ru/v6_top_pics/media/img/2/24/347126512643242.jpeg'
   if (path.startsWith('http')) return path
-  return `http://localhost:5000${path}`
+  return `${API_URL}${path}`
 }
 
 

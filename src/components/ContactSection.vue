@@ -41,6 +41,8 @@
 import { ref, onMounted, reactive } from 'vue'
 import axios from 'axios'
 
+import { API_URL } from '../api/config'
+
 const name = ref('')
 const email = ref('')
 const message = ref('')
@@ -71,7 +73,7 @@ const handleSubmit = () => {
 
  const getContactInfo = async() => {
     try {
-      const res = await axios.get("http://localhost:5000/api/contact")
+      const res = await axios.get(`${API_URL}/api/contact`)
       console.log()
       address.value = res.data.address;
       emailInfo.value = res.data.email;

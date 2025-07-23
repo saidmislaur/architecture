@@ -16,6 +16,7 @@ import { useRouter } from 'vue-router'
 
 import Header from '../components/Header.vue';
 import PortfolioSection from '../components/PortfolioSection.vue';
+import { API_URL } from '../api/config'
 
 const router = useRouter()
 const projects = ref([])
@@ -23,7 +24,7 @@ const loading = ref(true)
 
 const fetchProjects = async () => {
   try {
-    const res = await axios.get('http://localhost:5000/api/projects')
+    const res = await axios.get(`${API_URL}/api/projects`)
     projects.value = res.data
   } catch (err) {
     console.error('Ошибка загрузки проектов', err)
@@ -37,7 +38,7 @@ const goToProject = (id) => {
 }
 
 const getImageUrl = (imgPath) => {
-  return `http://localhost:5000/${imgPath}`
+  return `${API_URL}/${imgPath}`
 }
 
 onMounted(fetchProjects)
