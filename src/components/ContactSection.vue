@@ -62,7 +62,6 @@ const handleSubmit = () => {
     message: message.value
   })
 
-  // Очистка
   name.value = ''
   email.value = ''
   message.value = ''
