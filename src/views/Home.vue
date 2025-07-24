@@ -35,7 +35,7 @@ const projects = ref([])
 
 const getProjects = async () => {
   try {
-    const res = await axios.get(`${API_URL}/api/projects`)
+    const res = await axios.get(`https://architecture-backend-production-b641.up.railway.app/api/projects`)
     console.log(res.data)
     projects.value = res.data
   } catch (err) {
