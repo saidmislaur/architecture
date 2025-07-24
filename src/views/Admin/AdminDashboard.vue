@@ -5,7 +5,7 @@
         <h1>Админ-панель ARCH STUDIO</h1>
         <div class="admin-stats">
           <div class="stat-item">
-            <span class="stat-number">{{ stats.totalProjects }}</span>
+            <span class="stat-number">{{ filteredProjects.length }}</span>
             <span class="stat-label">Проектов</span>
           </div>
           <div class="admin-logout">
@@ -377,7 +377,8 @@ import axios from 'axios'
 import { useRouter } from 'vue-router'
 import { removeItem } from '../../utils/auth'
 
-const API_BASE = 'http://localhost:5000/api'
+import {API_URL} from '../../api/config'
+
 
 const router = useRouter()
 
@@ -442,7 +443,7 @@ const filteredProjects = computed(() => {
 const fetchProjects = async () => {
   try {
     loading.value = true
-    const { data } = await axios.get(`${API_BASE}/projects`)
+    const { data } = await axios.get(`${API_URL}/api/projects`)
     projects.value = data
   } catch (e) {
     showNotification('Ошибка загрузки проектов', 'error')
@@ -451,22 +452,14 @@ const fetchProjects = async () => {
   }
 }
 
-const fetchStats = async () => {
-  try {
-    const { data } = await axios.get(`${API_BASE}/stats/data`)
-    stats.totalProjects = data.totalProjects
-  } catch (e) {
-    console.error('Ошибка загрузки статистики:', e)
-  }
-}
 
 const saveProject = async () => {
   try {
     loading.value = true
 
     const url = editingProjectId.value
-      ? `${API_BASE}/projects/${editingProjectId.value}`
-      : `${API_BASE}/projects`
+      ? `${API_URL}/api/projects/${editingProjectId.value}`
+      : `${API_URL}/api/projects`
 
     const method = editingProjectId.value ? 'put' : 'post'
 
@@ -474,7 +467,6 @@ const saveProject = async () => {
 
     showNotification('Проект сохранен успешно')
     await fetchProjects()
-    await fetchStats()
     currentView.value = 'list'
     resetForm()
   } catch (e) {
@@ -489,10 +481,9 @@ const deleteProject = async (id) => {
 
   try {
     loading.value = true
-    await axios.delete(`${API_BASE}/projects/${id}`)
+    await axios.delete(`${API_URL}/api/projects/${id}`)
     showNotification('Проект удален')
     await fetchProjects()
-    await fetchStats()
   } catch (e) {
     showNotification('Ошибка удаления проекта', 'error')
   } finally {
@@ -504,7 +495,7 @@ const uploadImage = async (file) => {
   const formData = new FormData()
   formData.append('image', file)
 
-  const { data } = await axios.post(`${API_BASE}/upload/single`, formData)
+  const { data } = await axios.post(`${API_URL}/api/upload/single`, formData)
   return data.imageUrl
 }
 
@@ -590,7 +581,7 @@ const removeFeature = (i) => {
 const getImageUrl = (path) => {
   if (!path) return 'https://s0.rbk.ru/v6_top_pics/media/img/2/24/347126512643242.jpeg'
   if (path.startsWith('http')) return path
-  return `http://localhost:5000${path}`
+  return `${API_URL}${path}`
 }
 
 const handleImageError = (e) => {
@@ -627,7 +618,6 @@ const logout = () => {
 
 onMounted(() => {
   fetchProjects()
-  fetchStats()
 })
 </script>
 

@@ -38,7 +38,7 @@ const goToProject = (id) => {
 }
 
 const getImageUrl = (imgPath) => {
-  return `http://localhost:5000/${imgPath}`
+  return `http://:5000/${imgPath}`
 }
 
 onMounted(fetchProjects)

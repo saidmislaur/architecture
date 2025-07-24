@@ -28,13 +28,15 @@ import { useRouter } from 'vue-router'
 import { setToken } from '../../utils/auth'
 import { removeItem } from '../../utils/auth'
 
+import {API_URL} from '../../api/config'
+
 const password = ref('')
 const error = ref(null)
 const router = useRouter()
 
 const login = async () => {
   try {
-    const res = await axios.post('http://:5000/api/login', { password: password.value })
+    const res = await axios.post(`${API_URL}api/login`, { password: password.value })
     setToken(res.data.token)
     router.push('/admin-dashboard')
   } catch (err) {
