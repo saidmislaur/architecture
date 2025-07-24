@@ -3,5 +3,9 @@
     "env": {
       "NODE_VERSION": "18"
     }
-  }
+  },
+  "version": 2,
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/" }
+  ]
 }
