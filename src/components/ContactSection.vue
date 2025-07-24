@@ -41,7 +41,7 @@
 import { ref, onMounted, reactive } from 'vue'
 import axios from 'axios'
 
-import { API_URL } from '../api/config'
+import {API_URL} from '../api/config'
 
 const name = ref('')
 const email = ref('')

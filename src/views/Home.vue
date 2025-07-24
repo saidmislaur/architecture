@@ -33,8 +33,10 @@ import axios from 'axios'
 const projects = ref([])
 
 
+
 const getProjects = async () => {
   try {
+    console.log(API_URL)
     const res = await axios.get(`https://architecture-backend-production-b641.up.railway.app/api/projects`)
     console.log(res.data)
     projects.value = res.data
