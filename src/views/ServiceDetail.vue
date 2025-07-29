@@ -1,6 +1,5 @@
 <template>
   <div class="service-page">
-    <!-- Header -->
     <header class="header">
       <div class="container">
         <div class="header-content">
@@ -16,23 +15,19 @@
       </div>
     </header>
 
-    <!-- Breadcrumbs -->
     <div class="container">
       <nav class="breadcrumbs">
         <span>Услуги /</span>
       </nav>
     </div>
 
-    <!-- Main Content -->
     <main class="main-content">
       <div class="container">
-        <!-- Service Title -->
         <section class="service-hero">
           <h2 class="service-title">{{ serviceData.title }}</h2>
           <p class="service-subtitle">{{ serviceData.subtitle }}</p>
         </section>
 
-        <!-- Service Description -->
         <section class="service-description">
           <div class="description-grid">
             <div class="description-main">
@@ -72,7 +67,6 @@
           </div>
         </section>
 
-        <!-- Process Steps -->
         <section class="process-section">
           <h3 class="section-title">Этапы работы</h3>
           <div class="process-grid">
@@ -92,7 +86,6 @@
       </div>
     </main>
 
-    <!-- CTA Section -->
     <section class="cta-section">
       <div class="container">
         <div class="cta-content">
