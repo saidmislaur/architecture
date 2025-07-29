@@ -3,13 +3,15 @@
       <div class="container">
         <h2 class="section-title">Услуги</h2>
         <div class="services__grid">
-          <div v-for="service in services" :key="service.id" class="service-card">
-            <div class="service-card__icon">
-              <component :is="service.icon" />
-            </div>
-            <h3>{{ service.title }}</h3>
-            <p>{{ service.description }}</p>
-          </div>
+            <RouterLink v-for="service in services" :key="service.id" :to="`/service/${service.type}`">
+              <div class="service-card">
+                <div class="service-card__icon">
+                  <component :is="service.icon" />
+                </div>
+                  <h3>{{ service.title }}</h3>
+                  <p>{{ service.description }}</p>
+              </div>
+            </RouterLink>
         </div>
       </div>
     </section>
@@ -20,12 +22,14 @@ import { ref } from 'vue';
 const services = ref([
   {
     id: 1,
+    type: 'architecture',
     title: 'Архитектурное проектирование',
     description: 'Полный цикл архитектурного проектирования от концепции до рабочих чертежей.',
     icon: 'BuildingIcon'
   },
   {
     id: 4,
+    type: 'consulting',
     title: 'Консалтинг',
     description: 'Экспертные консультации по архитектурным и строительным вопросам.',
     icon: 'LightbulbIcon'

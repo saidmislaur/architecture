@@ -4,6 +4,7 @@ import Admin from '../views/Admin/AdminDashboard.vue';
 import AdminLogin from '../views/Admin/AdminLogin.vue'
 import Projects from '../views/Portfolio.vue';
 import ProjectDetailPage from '../views/ProjectDetailPage.vue';
+import Service from '../views/ServiceDetail.vue';
 import {getToken} from '../utils/auth';
 
 const routes = [
@@ -32,6 +33,11 @@ const routes = [
     path: '/admin-login',
     component: AdminLogin,
     name: 'admin-login',
+  },
+  {
+    path: '/service/:type',
+    component: Service,
+    name: 'service',
   }
 ];
 

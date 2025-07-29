@@ -10,7 +10,7 @@
     
     <Services />
 
-    <ContactSection />
+    <!-- <ContactSection /> -->
 
     <Footer />
   </div>
