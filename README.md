@@ -1,29 +1,30 @@
-# online-shop
+ссылка на проект – https://architecture-omega.vercel.app/
 
-This template should help get you started developing with Vue 3 in Vite.
+Сайт архитектурной студии
+Простая админ-панель для управления проектами в архитектурной студии. Реализован базовый CRUD-функционал, регистрация и авторизация администратора, адаптивный интерфейс и современный стек разработки.
 
-## Recommended IDE Setup
+Используемые библиотеки и фреймворки:
+Vue 3 — Composition API, компоненты, реактивность
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+Vue Router — маршрутизация между страницами
 
-## Customize configuration
+Pinia — управление состоянием (альтернатива Vuex)
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+Sass — препроцессор стилей
 
-## Project Setup
+Swiper — слайдеры и карусели
 
-```sh
-npm install
-```
+AOS — анимации при прокрутке
 
-### Compile and Hot-Reload for Development
+Axios — для запросов к внешним API (если будут)
 
-```sh
-npm run dev
-```
+Lucide Icons — SVG-иконки
 
-### Compile and Minify for Production
+Инструменты разработки:
+Vite — современный и быстрый сборщик
 
-```sh
-npm run build
-```
+ESLint + Prettier — линтинг и форматирование кода
+
+vite-plugin-vue-devtools — улучшенные инструменты разработчика
+
+Так же есть реализация на бэкенде: https://github.com/saidmislaur/architecture-backend
