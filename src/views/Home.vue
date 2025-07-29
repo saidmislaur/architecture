@@ -2,7 +2,7 @@
   <div class="app">
     <Header />
 
-    <MainSection />
+    <MainSection  :projects="projects" />
     
     <PortfolioSection :projects="projects" :limit="3" :button="Button"/>
 
