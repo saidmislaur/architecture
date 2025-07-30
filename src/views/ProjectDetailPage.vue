@@ -111,35 +111,14 @@
       </div>
     </section>
 
-    <section class="related-projects" v-if="relatedProjects.length">
-      <div class="container">
-        <h2 class="section-title">Похожие проекты</h2>
-        <div class="related-grid">
-          <div 
-            v-for="relatedProject in relatedProjects" 
-            :key="relatedProject.id"
-            class="related-card"
-            @click="loadProject(relatedProject)"
-          >
-            <div class="related-card__image">
-              <img :src="relatedProject.image" :alt="relatedProject.title" />
-            </div>
-            <div class="related-card__content">
-              <h4>{{ relatedProject.title }}</h4>
-              <p>{{ relatedProject.type }}</p>
-              <span class="related-card__year">{{ relatedProject.year }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <section class="project-cta">
       <div class="container">
         <div class="cta-content">
           <h2>Заинтересованы в подобном проекте?</h2>
           <p>Свяжитесь с нами, чтобы обсудить ваши идеи и возможности сотрудничества</p>
-          <button class="cta-btn">Связаться с нами</button>
+          <button class="cta-btn"><a :href="telegramLink" target="_blank" class="cta-button">
+            Написать в Telegram
+          </a></button>
         </div>
       </div>
     </section>
@@ -185,6 +164,8 @@ import { useRoute } from 'vue-router'
 import axios from 'axios'
 
 import { API_URL } from '../api/config'
+
+const telegramLink = 'https://t.me/your_username'
 
 const route = useRoute()
 const project = ref({})

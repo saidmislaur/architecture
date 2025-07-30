@@ -10,10 +10,12 @@
       </div>
       <Swiper :navigation="true" :modules="modules" class="mySwiper main__image">
           <SwiperSlide v-for="(item, index) in projects" :key="index">
-             <img 
-              :src="getImageUrl(item.photos[0]?.image)" 
-              :alt="item.title" 
+            <RouterLink :to="`/projects/${item._id}`">
+               <img 
+                :src="getImageUrl(item.photos[0]?.image)" 
+                :alt="item.title" 
             />
+            </RouterLink>
           </SwiperSlide>
         </Swiper>
     </div>

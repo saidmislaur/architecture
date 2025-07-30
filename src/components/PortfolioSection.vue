@@ -14,12 +14,12 @@
         </div>
 
         <div class="projects__sort">
-          <select v-model="sortBy" class="sort-select">
-            <option value="year">По году</option>
-            <option value="title">По названию</option>
-            <option value="area">По площади</option>
+          <select v-model="sortBy" class="filter-select">
+            <option value="all">Все категории</option>
+            <option value="residential">Жилая</option>
+            <option value="commercial">Коммерческая</option>
+            <option value="public">Общественная</option>
           </select>
-
           <button 
             @click="isGalleryView = !isGalleryView"
             :class="['view-toggle', { active: isGalleryView }]"
@@ -82,7 +82,7 @@
         <h3>Проекты не найдены</h3>
         <p>Попробуйте изменить параметры поиска или фильтры</p>
         <button 
-          @click="searchQuery = ''; activeFilter = 'all'" 
+          @click="searchQuery = ''; sortBy = 'all'" 
           class="reset-btn"
         >
           Сбросить фильтры
@@ -107,7 +107,7 @@ const props = defineProps({
 
 const activeFilter = ref('all')
 const searchQuery = ref('')
-const sortBy = ref('year')
+const sortBy = ref('all')
 const isGalleryView = ref(false)
 
 const displayedProjects = computed(() => {
@@ -118,8 +118,8 @@ const displayedProjects = computed(() => {
 const filteredProjects = computed(() => {
   let filtered = [...displayedProjects.value]
 
-  if (activeFilter.value !== 'all') {
-    filtered = filtered.filter(p => p.category === activeFilter.value)
+  if (sortBy.value !== 'all') {
+    filtered = filtered.filter(p => p.category && p.category === sortBy.value)
   }
 
   if (searchQuery.value) {
@@ -136,8 +136,6 @@ const filteredProjects = computed(() => {
         return new Date(b.createdAt) - new Date(a.createdAt)
       case 'title':
         return a.title.localeCompare(b.title)
-      case 'area':
-        return (parseInt(b.area) || 0) - (parseInt(a.area) || 0)
       default:
         return 0
     }
